@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UNSCRIPTED // CTRL ESCAPE</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./node_modules/phaser/dist/phaser.min.js"></script>
+  </head>
+  <body>
+
+    <!-- Tile legend shown on first boot -->
+    <div id="legend-overlay" class="legend-overlay">
+      <div class="legend-box">
+        <div class="legend-eyebrow">SYSTEM BOOT — v1.0</div>
+        <h2 class="legend-title">UNSCRIPTED</h2>
+        <p class="legend-subtitle">You are not controlling a character.<br>You are writing instructions that a machine executes.<br>The machine learns you. Then it rewrites you.</p>
+        <div class="legend-grid">
+          <div class="legend-row"><span class="tile-badge obs">O</span><span>Observer — machine begins profiling your patterns</span></div>
+          <div class="legend-row"><span class="tile-badge rw">R</span><span>Rewrite Terminal — unlocks the hack panel</span></div>
+          <div class="legend-row"><span class="tile-badge tr">T</span><span>Trace Scanner — spikes machine certainty</span></div>
+          <div class="legend-row"><span class="tile-badge gate">G</span><span>Gate — teleports to its linked gate</span></div>
+          <div class="legend-row"><span class="tile-badge shard">M</span><span>Memory Shard — fuel for rewrite abilities</span></div>
+        </div>
+        <div class="legend-keys">
+          <span>W / ↑ Move</span><span>A / ← Turn Left</span><span>D / → Turn Right</span><span>S / ↓ Wait</span>
+          <span>Backspace Delete</span><span>1–4 Rewrite</span><span>Q Scramble</span><span>? Help</span>
+        </div>
+        <button id="legend-dismiss">BOOT SEQUENCE ACKNOWLEDGED →</button>
+      </div>
+    </div>
+
+    <!-- Phase transition flash (full-screen) -->
+    <div id="phase-announce" class="phase-announce hidden">
+      <div class="phase-announce-inner">
+        <div id="phase-announce-number"></div>
+        <div id="phase-announce-name"></div>
+        <div id="phase-announce-desc"></div>
+      </div>
+    </div>
+
+    <div class="shell">
+      <section class="hud">
+        <div class="panel title-panel">
+          <p class="eyebrow">System Breach Prototype</p>
+          <h1>UNSCRIPTED</h1>
+          <p class="subtitle">You are not steering a hero. You are feeding a machine.</p>
+        </div>
+
+        <div class="panel status-panel">
+          <div class="phase-line">
+            <span>Phase</span>
+            <strong id="phase-name">Obedience</strong>
+          </div>
+          <p id="objective" class="objective"></p>
+          <div class="meters">
+            <div>
+              <span>Machine Certainty</span>
+              <div class="meter">
+                <div id="certainty-fill" class="meter-fill"></div>
+              </div>
+              <small id="certainty-label">0%</small>
+            </div>
+            <div>
+              <span>Prediction Failures</span>
+              <strong id="failure-count">0</strong>
+            </div>
+            <div>
+              <span>Memory Shards</span>
+              <strong id="shard-count">0 / 0</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel prediction-panel">
+          <div class="phase-line">
+            <span>Expected</span>
+            <strong id="prediction-text">...</strong>
+          </div>
+          <div class="phase-line">
+            <span>Confidence</span>
+            <strong id="prediction-confidence">0%</strong>
+          </div>
+          <div class="phase-line">
+            <span>Locked Input</span>
+            <strong id="locked-text">None</strong>
+          </div>
+        </div>
+
+        <!-- Machine profile panel -->
+        <div class="panel profile-panel">
+          <div class="phase-line">
+            <span>Machine Profile</span>
+            <strong id="profile-status">Inactive</strong>
+          </div>
+          <div id="profile-list" class="profile-list">
+            <p class="profile-inactive">Reach the Observer to activate profiling.</p>
+          </div>
+        </div>
+
+        <div class="panel queue-panel">
+          <div class="phase-line">
+            <span>Instruction Queue</span>
+            <strong id="queue-size">0 / 6</strong>
+          </div>
+          <div id="queue-list" class="queue-list"></div>
+          <div class="button-grid">
+            <button data-command="MOVE">W / ↑ &nbsp; Move</button>
+            <button data-command="TURN_LEFT">A / ← &nbsp; Turn Left</button>
+            <button data-command="TURN_RIGHT">D / → &nbsp; Turn Right</button>
+            <button data-command="WAIT">S / ↓ &nbsp; Wait</button>
+            <button id="delete-button" class="secondary">⌫ Delete Last</button>
+            <button id="restart-button" class="secondary">↺ Restart</button>
+          </div>
+        </div>
+
+        <div class="panel rewrite-panel">
+          <div class="phase-line">
+            <span>Rewrite Panel</span>
+            <strong id="rewrite-status">Locked</strong>
+          </div>
+          <div class="button-grid">
+            <button id="noise-button" class="rewrite" disabled>1 — Noise Injection</button>
+            <button id="ghost-button" class="rewrite" disabled>2 — Ghost Walk</button>
+            <button id="clock-button" class="rewrite" disabled>3 — Overclock</button>
+            <button id="scramble-button" class="rewrite" disabled>4 — Scramble Queue</button>
+          </div>
+          <div id="rewrite-state" class="rewrite-state">Awaiting root access.</div>
+        </div>
+
+        <div class="panel log-panel">
+          <div class="phase-line">
+            <span>System Log</span>
+            <strong>Live</strong>
+          </div>
+          <ul id="log-list" class="log-list"></ul>
+        </div>
+      </section>
+
+      <section class="viewport">
+        <div id="game-frame"></div>
+        <div id="overlay-message" class="overlay-message hidden"></div>
+      </section>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
