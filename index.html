@@ -9,7 +9,7 @@
   </head>
   <body>
 
-    <!-- Tile legend shown on first boot -->
+    <!-- Tile legend / help overlay (? to reopen) -->
     <div id="legend-overlay" class="legend-overlay">
       <div class="legend-box">
         <div class="legend-eyebrow">SYSTEM BOOT — v1.0</div>
@@ -24,13 +24,25 @@
         </div>
         <div class="legend-keys">
           <span>W / ↑ Move</span><span>A / ← Turn Left</span><span>D / → Turn Right</span><span>S / ↓ Wait</span>
-          <span>Backspace Delete</span><span>1–4 Rewrite</span><span>Q Scramble</span><span>? Help</span>
+          <span>⌫ Delete Last</span><span>1 Noise</span><span>2 Ghost</span><span>3 Overclock</span><span>4 / Q Scramble</span><span>? Help</span>
         </div>
         <button id="legend-dismiss">BOOT SEQUENCE ACKNOWLEDGED →</button>
       </div>
     </div>
 
-    <!-- Phase transition flash (full-screen) -->
+    <!-- Level intro screen (shown before each level) -->
+    <div id="level-intro" class="level-intro hidden">
+      <div class="level-intro-box">
+        <div id="li-number" class="li-number"></div>
+        <h2 id="li-name" class="li-name"></h2>
+        <p id="li-subtitle" class="li-subtitle"></p>
+        <p id="li-briefing" class="li-briefing"></p>
+        <div id="li-tags" class="li-tags"></div>
+        <button id="li-start">BEGIN SEQUENCE →</button>
+      </div>
+    </div>
+
+    <!-- Phase transition flash (full-screen, auto-hides) -->
     <div id="phase-announce" class="phase-announce hidden">
       <div class="phase-announce-inner">
         <div id="phase-announce-number"></div>
@@ -39,107 +51,156 @@
       </div>
     </div>
 
+    <!-- Level complete screen -->
+    <div id="level-complete" class="level-complete hidden">
+      <div class="level-complete-box">
+        <div class="lc-eyebrow">ESCAPED // PREDICTION FAILED</div>
+        <h2 id="lc-title"></h2>
+        <div class="lc-stats">
+          <div><span>Ticks</span><strong id="lc-ticks">0</strong></div>
+          <div><span>Shards</span><strong id="lc-shards">0</strong></div>
+          <div><span>Failures</span><strong id="lc-failures">0</strong></div>
+        </div>
+        <div id="lc-message" class="lc-message"></div>
+        <button id="lc-next">NEXT LEVEL →</button>
+        <button id="lc-restart" class="secondary">RESTART LEVEL</button>
+      </div>
+    </div>
+
     <div class="shell">
       <section class="hud">
         <div class="panel title-panel">
-          <p class="eyebrow">System Breach Prototype</p>
-          <h1>UNSCRIPTED</h1>
-          <p class="subtitle">You are not steering a hero. You are feeding a machine.</p>
+          <div class="panel-body">
+            <p class="eyebrow">System Breach Protocol</p>
+            <h1>UNSCRIPTED</h1>
+            <p class="subtitle">You are not steering a hero. You are feeding a machine.</p>
+            <div class="level-indicator">
+              <span id="level-label">Level 1 / 5</span>
+              <span id="level-name-label">Initialization</span>
+              <button id="help-button" class="help-btn" title="Open User Guide (?)">? Guide</button>
+            </div>
+          </div>
         </div>
 
         <div class="panel status-panel">
-          <div class="phase-line">
-            <span>Phase</span>
-            <strong id="phase-name">Obedience</strong>
+          <div class="panel-head">
+            <div class="phase-line">
+              <span>Phase</span>
+              <strong id="phase-name">Obedience</strong>
+            </div>
           </div>
-          <p id="objective" class="objective"></p>
-          <div class="meters">
-            <div>
-              <span>Machine Certainty</span>
-              <div class="meter">
-                <div id="certainty-fill" class="meter-fill"></div>
+          <div class="panel-body">
+            <p id="objective" class="objective"></p>
+            <div class="meters">
+              <div>
+                <span>Machine Certainty</span>
+                <div class="meter">
+                  <div id="certainty-fill" class="meter-fill safe"></div>
+                </div>
+                <small id="certainty-label">0%</small>
               </div>
-              <small id="certainty-label">0%</small>
-            </div>
-            <div>
-              <span>Prediction Failures</span>
-              <strong id="failure-count">0</strong>
-            </div>
-            <div>
-              <span>Memory Shards</span>
-              <strong id="shard-count">0 / 0</strong>
+              <div>
+                <span>Prediction Failures</span>
+                <strong id="failure-count">0</strong>
+              </div>
+              <div>
+                <span>Memory Shards</span>
+                <strong id="shard-count">0 / 0</strong>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="panel prediction-panel">
-          <div class="phase-line">
-            <span>Expected</span>
-            <strong id="prediction-text">...</strong>
-          </div>
-          <div class="phase-line">
-            <span>Confidence</span>
-            <strong id="prediction-confidence">0%</strong>
-          </div>
-          <div class="phase-line">
-            <span>Locked Input</span>
-            <strong id="locked-text">None</strong>
+          <div class="panel-body">
+            <div class="phase-line">
+              <span>Expected</span>
+              <strong id="prediction-text">...</strong>
+            </div>
+            <div class="phase-line">
+              <span>Confidence</span>
+              <strong id="prediction-confidence">0%</strong>
+            </div>
+            <div class="phase-line">
+              <span>Locked Input</span>
+              <strong id="locked-text">None</strong>
+            </div>
           </div>
         </div>
 
         <!-- Machine profile panel -->
         <div class="panel profile-panel">
-          <div class="phase-line">
-            <span>Machine Profile</span>
-            <strong id="profile-status">Inactive</strong>
+          <div class="panel-head">
+            <div class="phase-line">
+              <span>Machine Profile</span>
+              <strong id="profile-status">Inactive</strong>
+            </div>
           </div>
-          <div id="profile-list" class="profile-list">
-            <p class="profile-inactive">Reach the Observer to activate profiling.</p>
+          <div class="panel-body">
+            <div id="profile-list" class="profile-list">
+              <p class="profile-inactive">Reach the Observer to activate profiling.</p>
+            </div>
           </div>
         </div>
 
         <div class="panel queue-panel">
-          <div class="phase-line">
-            <span>Instruction Queue</span>
-            <strong id="queue-size">0 / 6</strong>
+          <div class="panel-head">
+            <div class="phase-line">
+              <span>Instruction Queue</span>
+              <strong id="queue-size">0 / 6</strong>
+            </div>
           </div>
-          <div id="queue-list" class="queue-list"></div>
-          <div class="button-grid">
-            <button data-command="MOVE">W / ↑ &nbsp; Move</button>
-            <button data-command="TURN_LEFT">A / ← &nbsp; Turn Left</button>
-            <button data-command="TURN_RIGHT">D / → &nbsp; Turn Right</button>
-            <button data-command="WAIT">S / ↓ &nbsp; Wait</button>
-            <button id="delete-button" class="secondary">⌫ Delete Last</button>
-            <button id="restart-button" class="secondary">↺ Restart</button>
+          <div class="panel-body">
+            <div id="queue-list" class="queue-list"></div>
+            <div class="button-grid">
+              <button data-command="MOVE">W / ↑ &nbsp; Move</button>
+              <button data-command="TURN_LEFT">A / ← &nbsp; Turn Left</button>
+              <button data-command="TURN_RIGHT">D / → &nbsp; Turn Right</button>
+              <button data-command="WAIT">S / ↓ &nbsp; Wait</button>
+              <button id="delete-button" class="secondary">⌫ Delete Last</button>
+              <button id="restart-button" class="secondary">↺ Restart Level</button>
+            </div>
           </div>
         </div>
 
         <div class="panel rewrite-panel">
-          <div class="phase-line">
-            <span>Rewrite Panel</span>
-            <strong id="rewrite-status">Locked</strong>
+          <div class="panel-head">
+            <div class="phase-line">
+              <span>Rewrite Panel</span>
+              <strong id="rewrite-status">Locked</strong>
+            </div>
           </div>
-          <div class="button-grid">
-            <button id="noise-button" class="rewrite" disabled>1 — Noise Injection</button>
-            <button id="ghost-button" class="rewrite" disabled>2 — Ghost Walk</button>
-            <button id="clock-button" class="rewrite" disabled>3 — Overclock</button>
-            <button id="scramble-button" class="rewrite" disabled>4 — Scramble Queue</button>
+          <div class="panel-body">
+            <div class="button-grid">
+              <button id="noise-button" class="rewrite" disabled>1 — Noise Injection</button>
+              <button id="ghost-button" class="rewrite" disabled>2 — Ghost Walk</button>
+              <button id="clock-button" class="rewrite" disabled>3 — Overclock</button>
+              <button id="scramble-button" class="rewrite" disabled>4 — Scramble Queue</button>
+            </div>
+            <div id="rewrite-state" class="rewrite-state">Awaiting root access.</div>
           </div>
-          <div id="rewrite-state" class="rewrite-state">Awaiting root access.</div>
         </div>
 
         <div class="panel log-panel">
-          <div class="phase-line">
-            <span>System Log</span>
-            <strong>Live</strong>
+          <div class="panel-head">
+            <div class="phase-line">
+              <span>System Log</span>
+              <strong>Live</strong>
+            </div>
           </div>
-          <ul id="log-list" class="log-list"></ul>
+          <div class="panel-body">
+            <ul id="log-list" class="log-list"></ul>
+          </div>
         </div>
       </section>
 
       <section class="viewport">
         <div id="game-frame"></div>
         <div id="overlay-message" class="overlay-message hidden"></div>
+        <div id="tile-tooltip" class="tile-tooltip hidden">
+          <span id="tooltip-icon" class="tile-badge obs">O</span>
+          <span id="tooltip-text"></span>
+        </div>
       </section>
     </div>
 

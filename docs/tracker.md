@@ -29,7 +29,7 @@
 ---
 
 ## In Progress 🔄
-- [ ] Level system (multiple maps, level selector or progression)
+- (nothing — all core systems complete)
 
 ---
 
@@ -44,14 +44,14 @@
 - [x] Locked input red border pulse instead of plain `disabled`
 - [x] Corruption flash animation on queue items when mutated
 - [x] Profile panel glitch animation when Noise or Scramble fires
-- [ ] Prediction panel blink animation when locked input changes
-- [ ] Scanline / CRT filter overlay (CSS)
-- [ ] Screen shake on queue corruption (not just pulse)
+- [x] Prediction panel blink animation when locked input changes
+- [x] Scanline / CRT filter overlay (CSS) — green tinted scanlines + vignette
+- [x] Screen shake on queue corruption (Phaser camera shake)
 
 ### Onboarding
 - [x] Tile legend overlay at game start — explains `O`, `R`, `T`, `G`, `M` + all keybinds
 - [x] `?` key reopens the legend at any time
-- [ ] First-run tooltip sequence: highlight each tile type as player approaches it
+- [x] First-run tooltip sequence: shows on first approach to O, R, T, G, M — auto-dismisses after 3.2s
 
 ### Machine Profile Panel
 - [x] Live command frequency bars (`MOVE ████ 60%`)
@@ -66,22 +66,16 @@
 - [x] First Scramble is free — subsequent uses cost 1 shard
 - [x] Certainty gain/loss now logged with delta amount (e.g. `certainty +14`)
 - [x] Trace tile warning: adjacent floor tiles show dim red pulse
-- [ ] Mobile layout (touch buttons, scrollable HUD)
+- [x] Mobile layout — viewport-first stacking, scrollable HUD, 48px tap targets, aspect-ratio canvas
 
 ---
 
-## Backlog — Levels 🗺️
-- [ ] Level 1-A: Tutorial corridor (movement only)
-- [ ] Level 1-B: Gate pair tutorial
-- [ ] Level 1-C: Shard collection puzzle
-- [ ] Level 2-A: Observer with trace avoidance
-- [ ] Level 2-B: Two-corridor trace gauntlet
-- [ ] Level 3-A: Reach R tile under interference
-- [ ] Level 3-B: Gate shortcut with trace exit
-- [ ] Level 4-A: Collect all shards before R
-- [ ] Level 4-B: Ghost Walk trace dodge
-- [ ] Level 4-C: Start at 80% certainty — escape using rewrites
-- [ ] Final level: Full gauntlet, all mechanics, tight layout
+## Levels 🗺️
+- [x] Level 1 — Initialization: Open map, tutorial, no trace tiles
+- [x] Level 2 — Surveillance: Split map, trace-guarded corridor, gate shortcut
+- [x] Level 3 — Maze Protocol: H-shaped layout, trace tiles flank inner rooms
+- [x] Level 4 — Zero Day: Starts at Phase 4, certainty=62, 6 trace tiles, all tools live
+- [x] Level 5 — Final Protocol: Original map, all mechanics, full run
 
 ---
 
