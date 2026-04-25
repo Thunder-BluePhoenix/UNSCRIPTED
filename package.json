@@ -1,6 +1,6 @@
 {
   "name": "unscripted",
-  "private": true,
+  "license": "MIT",
   "scripts": {
     "start": "python3 -m http.server 4173",
     "serve": "python3 -m http.server 4173"
